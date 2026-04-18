@@ -156,6 +156,39 @@ class NansenClient:
     BASE = f"{PROXY_BASE}/nansen"
     HEADERS = {"apiKey": NANSEN_KEY, "Content-Type": "application/json"}
 
+    async def get_top_trending(self) -> list[dict]:
+        """
+        Scan Nansen Token Screener for top 100 trending coins.
+        Filters: only_smart_money, timeframe=24h, chains=[ethereum, solana, base].
+        """
+        url = "https://api.nansen.ai/api/v1/token-screener"
+        payload = {
+            "chains": ["ethereum", "solana", "base"],
+            "timeframe": "24h",
+            "filters": {
+                "only_smart_money": True,
+                "token_age_days": {"max": 365, "min": 1}
+            },
+            "order_by": [{"field": "buy_volume", "direction": "DESC"}],
+            "pagination": {"page": 1, "per_page": 100}
+        }
+        
+        # Note: the nansen screener uses POST but our _fetch is currently GET.
+        # I will update _fetch to support POST, or call it directly here.
+        session = await get_session()
+        try:
+            async with session.post(url, headers=self.HEADERS, json=payload) as resp:
+                if resp.status == 200:
+                    data = await resp.json()
+                    # Parse trending coins. Each item has {symbol, address, etc}
+                    # Result structure: {"data": [...]}
+                    return data.get("data", [])
+                else:
+                    log.error(f"Nansen Screener: HTTP {resp.status}")
+        except Exception as e:
+            log.error(f"Nansen Screener error: {e}")
+        return []
+
     async def get_smart_money_flow(self, token_address: str) -> Optional[dict]:
         """
         Fetch net smart-money flow for a token over 24h and 7d.

@@ -20,6 +20,9 @@ import os
 import argparse
 import aiohttp
 from dotenv import load_dotenv
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+import uvicorn
 
 load_dotenv()
 
@@ -36,9 +39,34 @@ logging.basicConfig(
 log = logging.getLogger("airclaw.main")
 
 # ── Imports after logging setup ──
-from core.engine import AirClawOrchestrator
+from core.engine import AirClawOrchestrator, TradeSignal
 from bot.telegram_bot import build_application, WATCHLIST
 from api.clients import close_session
+
+# ── FastAPI app setup ──
+server = FastAPI(title="AirClaw Intelligence API")
+server.add_middleware(
+    CORSMiddleware,
+    allow_origins=["*"],
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
+
+active_signals: list[TradeSignal] = []
+last_scan_time: float = 0
+
+@server.get("/api/signals")
+async def get_signals():
+    return {
+        "status": "live",
+        "last_scan": last_scan_time,
+        "count": len(active_signals),
+        "signals": active_signals
+    }
+
+@server.get("/api/health")
+async def health():
+    return {"status": "ok", "engine": "AirClaw/1.0.0"}
 
 
 # ─────────────────────────────────────────────
@@ -147,6 +175,53 @@ Watchdog: ACTIVE — monitoring entry to exit
 
 
 # ─────────────────────────────────────────────
+# BACKGROUND SCANNER
+# ─────────────────────────────────────────────
+
+async def background_scanner(orchestrator: AirClawOrchestrator):
+    """
+    Continuous market scanner. 
+    1. Fetches trending tokens from Nansen Token Screener.
+    2. Runs convergence analysis on each.
+    3. Updates 'active_signals' for the API and Telegram.
+    """
+    global active_signals, last_scan_time
+    
+    while True:
+        try:
+            log.info("Starting background scan cycle...")
+            
+            # Step 1: Get market opportunities via Nansen Screener
+            trending = await orchestrator.researcher.nansen.get_top_trending()
+            if not trending:
+                log.warning("Nansen Screener returned no trending tokens.")
+                await asyncio.sleep(300)
+                continue
+            
+            # Formulate scan list (limit to top 10 for performance/rate limits)
+            scan_list = []
+            for t in trending[:10]:
+                scan_list.append({
+                    "symbol": f"{t.get('ticker')}/USDT",
+                    "coin_id": t.get("id"), # Might need mapping or CG check
+                    "token_address": t.get("address"),
+                    "cq_symbol": "eth" # Standard liquid baseline
+                })
+            
+            # Step 2: Run convergence orchestrator
+            signals = await orchestrator.scan_watchlist(scan_list)
+            
+            # Step 3: Update state
+            active_signals = signals
+            last_scan_time = time.time()
+            log.info(f"Scan complete. Found {len(signals)} high-confidence signals.")
+            
+        except Exception as e:
+            log.error(f"Scanner loop error: {e}")
+            
+        await asyncio.sleep(600) # Scan every 10 minutes
+
+# ─────────────────────────────────────────────
 # MAIN
 # ─────────────────────────────────────────────
 
@@ -175,20 +250,28 @@ async def main():
         await close_session()
         return
 
-    # ── Production mode: run gate check, then start bot ──
+    # ── Production mode: run gate check, then start bot and web server ──
     log.info("Running startup gate check...")
     gate = await orchestrator.run_gate_check()
     if not gate["passed_gate"]:
         log.warning(f"Gate check Sharpe={gate['sharpe_ratio']} — weights were evolved, continuing")
 
+    # Start background scanner
+    asyncio.create_task(background_scanner(orchestrator))
+
     log.info("Starting Telegram bot...")
     app = build_application(orchestrator)
+
+    # Start API server in the background
+    config = uvicorn.Config(server, host="0.0.0.0", port=8000, log_level="info")
+    uvicorn_server = uvicorn.Server(config)
+    asyncio.create_task(uvicorn_server.serve())
 
     # Run bot (blocking)
     async with app:
         await app.start()
         await app.updater.start_polling(drop_pending_updates=True)
-        log.info("Bot is polling. Send /start to your bot.")
+        log.info("Bot is polling. API server is live at :8000. Send /start to your bot.")
         try:
             await asyncio.Event().wait()  # Block forever
         except (KeyboardInterrupt, asyncio.CancelledError):

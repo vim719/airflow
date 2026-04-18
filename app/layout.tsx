@@ -1,11 +1,16 @@
 import type { Metadata } from 'next'
-import { Instrument_Serif, JetBrains_Mono } from 'next/font/google'
+import { Instrument_Serif, JetBrains_Mono, Syne } from 'next/font/google'
 import './globals.css'
 
 const instrumentSerif = Instrument_Serif({
   subsets: ['latin'],
   weight: '400',
   variable: '--font-instrument',
+})
+
+const syne = Syne({
+  subsets: ['latin'],
+  variable: '--font-syne',
 })
 
 const jetbrainsMono = JetBrains_Mono({
@@ -25,7 +30,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={`${instrumentSerif.variable} ${jetbrainsMono.variable} font-sans`}>
+      <body className={`${instrumentSerif.variable} ${syne.variable} ${jetbrainsMono.variable} font-sans`}>
         {children}
       </body>
     </html>

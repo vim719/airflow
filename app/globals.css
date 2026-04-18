@@ -2,228 +2,70 @@
 @tailwind components;
 @tailwind utilities;
 
+:root {
+  --ac-bg: #0A0A0A;
+  --ac-surface: #141414;
+  --ac-border: #262626;
+  --ac-text: #E5E5E5;
+  --ac-muted: #737373;
+  --ac-gold: #B87D2A;
+  --ac-gold-bg: #FAC76520;
+  --ac-green: #1D9E75;
+  --ac-green-bg: #1D9E7518;
+  --ac-red: #E24B4A;
+  --ac-red-bg: #E24B4A18;
+  --ac-blue: #185FA5;
+  --ac-blue-bg: #185FA518;
+}
+
 @layer base {
-  :root {
-    --font-serif: 'Instrument Serif', Georgia, serif;
-    --font-sans: 'Geist', system-ui, sans-serif;
-    --font-mono: 'Geist Mono', monospace;
-  }
-
-  * {
-    box-sizing: border-box;
-  }
-
-  html {
-    scroll-behavior: smooth;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-  }
-
   body {
-    background-color: #FAFAF8;
-    color: #0D0D0D;
-  }
-
-  /* Tabular nums for all data display */
-  .tabular { font-variant-numeric: tabular-nums; }
-
-  /* Selection style */
-  ::selection {
-    background-color: #E8D5A3;
-    color: #0D0D0D;
+    background: var(--ac-bg);
+    color: var(--ac-text);
+    font-family: var(--font-syne), sans-serif;
   }
 }
 
 @layer components {
-  /* ── Typography ── */
-  .display-xl {
-    font-family: var(--font-serif);
-    font-size: clamp(2.5rem, 5vw, 4.5rem);
-    line-height: 1.05;
-    letter-spacing: -0.02em;
+  .ac-card {
+    @apply bg-[var(--ac-surface)] border-[0.5px] border-[var(--ac-border)] rounded-md transition-colors;
   }
-
-  .display-lg {
-    font-family: var(--font-serif);
-    font-size: clamp(1.75rem, 3vw, 2.75rem);
-    line-height: 1.1;
-    letter-spacing: -0.015em;
-  }
-
-  .display-md {
-    font-family: var(--font-serif);
-    font-size: clamp(1.25rem, 2vw, 1.75rem);
-    line-height: 1.2;
-    letter-spacing: -0.01em;
+  
+  .ac-card:hover {
+    @apply border-neutral-600;
   }
 
   .label-mono {
     font-family: var(--font-mono);
-    font-size: 0.625rem;
-    letter-spacing: 0.12em;
-    text-transform: uppercase;
-    color: #6B6B6B;
+    @apply text-[10px] uppercase tracking-wider text-[var(--ac-muted)];
   }
 
   .score-display {
     font-family: var(--font-mono);
-    font-variant-numeric: tabular-nums;
-    letter-spacing: -0.02em;
+    @apply font-bold leading-none;
   }
 
-  /* ── Cards ── */
-  .card {
-    background: #FFFFFF;
-    border: 1px solid #E5E4DF;
-    border-radius: 8px;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.06);
-  }
-
-  .card-hover {
-    transition: box-shadow 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
-  }
-
-  .card-hover:hover {
-    box-shadow: 0 4px 12px rgba(0,0,0,0.08);
-    border-color: #D4A017;
-    transform: translateY(-1px);
-  }
-
-  /* ── Status indicators ── */
-  .status-live {
-    display: inline-flex;
-    align-items: center;
-    gap: 6px;
-    font-family: var(--font-mono);
-    font-size: 0.625rem;
-    letter-spacing: 0.08em;
-    text-transform: uppercase;
-    color: #0F6E56;
-    background: #E8F5F1;
-    border: 1px solid #9FE1CB;
-    padding: 3px 10px;
-    border-radius: 20px;
-  }
-
-  .status-live::before {
-    content: '';
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background: #1D9E75;
-    animation: pulseDot 2s ease-in-out infinite;
-  }
-
-  /* ── Ticker tape ── */
-  .ticker-wrap {
-    overflow: hidden;
-    white-space: nowrap;
-    border-top: 1px solid #E5E4DF;
-    border-bottom: 1px solid #E5E4DF;
-    background: #FAFAF8;
-  }
-
-  .ticker-inner {
-    display: inline-flex;
-    animation: ticker 60s linear infinite;
-  }
-
-  /* ── Signal badge ── */
-  .badge-buy {
-    background: #E8F5F1;
-    color: #0F6E56;
-    border: 1px solid #9FE1CB;
-    font-family: var(--font-mono);
-    font-size: 0.625rem;
-    letter-spacing: 0.1em;
-    padding: 2px 8px;
-    border-radius: 3px;
-  }
-
-  .badge-hold {
-    background: #FBF2E6;
-    color: #854F0B;
-    border: 1px solid #E8D5A3;
-    font-family: var(--font-mono);
-    font-size: 0.625rem;
-    letter-spacing: 0.1em;
-    padding: 2px 8px;
-    border-radius: 3px;
-  }
-
-  /* ── Gold rule ── */
   .gold-rule {
-    width: 40px;
-    height: 1px;
-    background: #B8860B;
+    @apply h-[2px] w-full bg-gradient-to-r from-[var(--ac-gold)] to-transparent mb-4;
   }
 
-  /* ── Subtle grid background ── */
+  .status-dot {
+    @apply w-[7px] h-[7px] rounded-full bg-[var(--ac-green)] inline-block mr-1.5 animate-pulse;
+  }
+
+  .live-badge {
+    @apply font-mono text-[10px] text-[var(--ac-green)] bg-[var(--ac-green-bg)] border-[0.5px] border-[var(--ac-green)] px-2 py-0.5 rounded-full flex items-center;
+  }
+
+  .log-terminal {
+    @apply bg-black border-[0.5px] border-[var(--ac-border)] rounded p-2 overflow-y-auto font-mono text-[10px] text-[var(--ac-muted)] leading-relaxed;
+  }
+
+  /* Custom utility for the grid background */
   .grid-bg {
-    background-image:
-      linear-gradient(rgba(181,164,132,0.06) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(181,164,132,0.06) 1px, transparent 1px);
-    background-size: 40px 40px;
+    background-image: 
+      linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+    background-size: 20px 20px;
   }
-
-  /* ── Agent node ── */
-  .agent-node {
-    position: relative;
-    background: #FFFFFF;
-    border: 1px solid #E5E4DF;
-    border-radius: 8px;
-    padding: 16px 20px;
-    transition: border-color 0.25s ease, box-shadow 0.25s ease;
-  }
-
-  .agent-node.active {
-    border-color: #B8860B;
-    box-shadow: 0 0 0 3px rgba(184,134,11,0.08);
-  }
-
-  .agent-node::before {
-    content: '';
-    position: absolute;
-    top: 0; left: 0; right: 0;
-    height: 2px;
-    border-radius: 8px 8px 0 0;
-    background: #B8860B;
-    opacity: 0;
-    transition: opacity 0.25s ease;
-  }
-
-  .agent-node.active::before {
-    opacity: 1;
-  }
-
-  /* ── Consultation chat bubble ── */
-  .bubble-agent {
-    background: #FFFFFF;
-    border: 1px solid #E5E4DF;
-    border-radius: 12px 12px 12px 2px;
-    padding: 14px 18px;
-    max-width: 85%;
-    box-shadow: 0 1px 3px rgba(0,0,0,0.04);
-  }
-
-  .bubble-user {
-    background: #0D0D0D;
-    color: #FAFAF8;
-    border-radius: 12px 12px 2px 12px;
-    padding: 14px 18px;
-    max-width: 85%;
-    margin-left: auto;
-  }
-}
-
-@layer utilities {
-  /* Staggered animation delays */
-  .delay-75  { animation-delay: 75ms; }
-  .delay-150 { animation-delay: 150ms; }
-  .delay-225 { animation-delay: 225ms; }
-  .delay-300 { animation-delay: 300ms; }
-  .delay-375 { animation-delay: 375ms; }
-  .delay-450 { animation-delay: 450ms; }
-
-  .opacity-0-start { opacity: 0; }
 }
