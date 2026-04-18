@@ -1,0 +1,30 @@
+# next.js
+/.next/
+/out/
+
+# dependencies
+/node_modules/
+
+# env
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+MVP/.env
+
+# logs
+*.log
+/MVP/logs/
+
+# ide
+.vscode/
+.idea/
+.DS_Store
+
+# python
+__pycache__/
+*.py[cod]
+*$py.class
+venv/
+ENV/
