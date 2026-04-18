@@ -192,15 +192,20 @@ async def background_scanner(orchestrator: AirClawOrchestrator):
             log.info("Starting background scan cycle...")
             
             # Step 1: Get market opportunities via Nansen Screener
+            log.info("📡 QUERYING NANSEN: Fetching top Institutional 'Smart Money' flows...")
             trending = await orchestrator.researcher.nansen.get_top_trending()
+            
             if not trending:
                 log.warning("Nansen Screener returned no trending tokens.")
                 await asyncio.sleep(300)
                 continue
             
+            log.info(f"✅ NANSEN DATA RECEIVED: Identified {len(trending)} Institutional targets.")
+            
             # Formulate scan list (limit to top 10 for performance/rate limits)
             scan_list = []
             for t in trending[:10]:
+                log.info(f"   [NANSEN SIGNAL] {t.get('ticker')} | Vol: ${t.get('buy_volume', 0):,.0f} | Smart Money Inflow Detected")
                 scan_list.append({
                     "symbol": f"{t.get('ticker')}/USDT",
                     "coin_id": t.get("id"), # Might need mapping or CG check

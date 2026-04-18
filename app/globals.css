@@ -8,64 +8,83 @@
   --ac-border: #262626;
   --ac-text: #E5E5E5;
   --ac-muted: #737373;
-  --ac-gold: #B87D2A;
-  --ac-gold-bg: #FAC76520;
+  --ac-gold: #D4AF37;
+  --ac-gold-bg: #D4AF3715;
   --ac-green: #1D9E75;
-  --ac-green-bg: #1D9E7518;
+  --ac-green-bg: #1D9E7515;
   --ac-red: #E24B4A;
-  --ac-red-bg: #E24B4A18;
+  --ac-red-bg: #E24B4A15;
   --ac-blue: #185FA5;
-  --ac-blue-bg: #185FA518;
+  --ac-blue-bg: #185FA515;
 }
 
 @layer base {
   body {
-    background: var(--ac-bg);
+    background-color: var(--ac-bg);
     color: var(--ac-text);
-    font-family: var(--font-syne), sans-serif;
+    font-size: 14px;
   }
 }
 
 @layer components {
-  .ac-card {
-    @apply bg-[var(--ac-surface)] border-[0.5px] border-[var(--ac-border)] rounded-md transition-colors;
-  }
-  
-  .ac-card:hover {
-    @apply border-neutral-600;
-  }
-
-  .label-mono {
-    font-family: var(--font-mono);
-    @apply text-[10px] uppercase tracking-wider text-[var(--ac-muted)];
-  }
-
-  .score-display {
-    font-family: var(--font-mono);
-    @apply font-bold leading-none;
-  }
-
-  .gold-rule {
-    @apply h-[2px] w-full bg-gradient-to-r from-[var(--ac-gold)] to-transparent mb-4;
-  }
-
-  .status-dot {
-    @apply w-[7px] h-[7px] rounded-full bg-[var(--ac-green)] inline-block mr-1.5 animate-pulse;
-  }
-
-  .live-badge {
-    @apply font-mono text-[10px] text-[var(--ac-green)] bg-[var(--ac-green-bg)] border-[0.5px] border-[var(--ac-green)] px-2 py-0.5 rounded-full flex items-center;
-  }
-
-  .log-terminal {
-    @apply bg-black border-[0.5px] border-[var(--ac-border)] rounded p-2 overflow-y-auto font-mono text-[10px] text-[var(--ac-muted)] leading-relaxed;
-  }
-
-  /* Custom utility for the grid background */
   .grid-bg {
     background-image: 
       linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
       linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
     background-size: 20px 20px;
+  }
+
+  .ac-card {
+    background: var(--ac-surface);
+    border: 0.5px solid var(--ac-border);
+    border-radius: 4px;
+    transition: all 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
+  }
+
+  .ac-card:hover {
+    border-color: #404040;
+  }
+
+  .label-mono {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--ac-muted);
+  }
+
+  .font-mono {
+    font-family: var(--font-mono);
+  }
+
+  .font-syne {
+    font-family: var(--font-syne);
+  }
+
+  /* Status dot with institutional pulse */
+  .status-dot {
+    @apply w-2 h-2 rounded-full;
+    animation: inst-pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+  }
+
+  @keyframes inst-pulse {
+    0%, 100% { opacity: 1; transform: scale(1); }
+    50% { opacity: 0.3; transform: scale(0.9); }
+  }
+
+  /* Terminal-style scrollbar */
+  ::-webkit-scrollbar {
+    width: 4px;
+    height: 4px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: var(--ac-border);
+    border-radius: 4px;
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: #404040;
   }
 }

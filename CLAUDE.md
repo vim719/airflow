@@ -1,0 +1,14 @@
+# CLAUDE.md
+
+## AirClaw Project
+A multi-agent intelligence engine for trade convergence and institutional research.
+
+## Design System
+Always read DESIGN.md before making any visual or UI decisions.
+All font choices, colors, spacing, and aesthetic direction are defined there.
+Do not deviate without explicit user approval.
+In QA mode, flag any code that doesn't match DESIGN.md.
+
+## Build/Run
+- `npm run dev` to start the frontend.
+- `python3 MVP/main.py` to start the intelligence core.

@@ -1,76 +1,79 @@
 'use client'
 
 import { useState, useEffect, useRef } from 'react'
-import Link from 'next/link'
 import { clsx } from 'clsx'
 
 // ── Components ────────────────────────────────────────────────
 
-function ScoreCard({ label, value, sub, color, percent, onClick }: any) {
+function ScoreCard({ label, value, sub, color, percent }: any) {
   return (
-    <div className="ac-card p-3.5 cursor-pointer" onClick={onClick}>
-      <div className="label-mono mb-1.5">{label}</div>
-      <div className="score-display text-2xl" style={{ color }}>{value}</div>
-      <div className="text-[10px] text-[var(--ac-muted)] font-mono mt-0.5">{sub}</div>
-      <div className="h-[3px] bg-neutral-800 rounded-full mt-2 overflow-hidden">
+    <div className="ac-card p-4 space-y-3">
+      <div className="label-mono">{label}</div>
+      <div className="font-mono text-2xl font-bold tabular-nums" style={{ color }}>{value}</div>
+      <div className="h-[2px] bg-[var(--ac-border)] w-full rounded-full overflow-hidden">
         <div 
-          className="h-full rounded-full transition-all duration-1000" 
+          className="h-full rounded-full transition-all duration-1000 ease-in-out" 
           style={{ width: `${percent}%`, background: color }}
         />
       </div>
+      <div className="label-mono text-[9px] opacity-60 tracking-tight">{sub}</div>
     </div>
   )
 }
 
-function SignalPanel({ signal, loading }: any) {
+function SignalConsole({ signal, loading }: any) {
   if (!signal) {
     return (
-      <div className="ac-card overflow-hidden mb-3.5">
-        <div className="flex items-center justify-between px-3.5 py-2.5 border-b border-[var(--ac-border)]">
-          <div className="label-mono uppercase tracking-widest">Convergence Signal — Scanning</div>
-          <div className="live-badge !text-neutral-500 !border-neutral-500 !bg-transparent opacity-50">NO ACTIVE SIGNAL</div>
+      <div className="ac-card overflow-hidden mb-4">
+        <div className="flex items-center justify-between px-4 py-2 border-b border-[var(--ac-border)] bg-black/20">
+          <div className="label-mono">Convergence Stream</div>
+          <div className="flex items-center gap-2">
+            <div className="status-dot bg-ac-muted/40"></div>
+            <span className="label-mono text-[9px]">Awaiting Signal...</span>
+          </div>
         </div>
-        <div className="p-3.5 text-center py-12">
-          <div className="label-mono mb-4 text-xs">Principal Researcher Node: Online</div>
-          <div className="text-sm text-[var(--ac-muted)] max-w-md mx-auto leading-relaxed italic">
-            "We are screening 100+ trending Smart Money tokens across Ethereum, Solana, and Base. 
-            No signal has yet cleared the 88% institutional convergence gate."
+        <div className="p-10 text-center opacity-40">
+          <div className="font-syne text-xl uppercase font-bold text-ac-muted mb-2 tracking-tight">Scanner Online</div>
+          <div className="font-mono text-[10px] max-w-xs mx-auto leading-relaxed">
+            PROPRIETARY BEYESIAN CONVERGENCE FILTER ACTIVE. SCREENING HIGH-CONFIDENCE SMART MONEY INFLOWS ON ETH, SOL, BASE.
           </div>
         </div>
       </div>
     )
   }
 
-  const confidenceColor = signal.confidence >= 90 ? 'var(--ac-green)' : 'var(--ac-gold)';
-
   return (
-    <div className="ac-card overflow-hidden mb-3.5">
-      <div className="flex items-center justify-between px-3.5 py-2.5 border-b border-[var(--ac-border)]">
-        <div className="label-mono uppercase tracking-widest text-[var(--ac-muted)]">Convergence Signal — Total Eclipse Event</div>
-        <div className="px-2 py-0.5 border-[0.5px] rounded text-[10px] font-mono tracking-wider font-bold" 
-             style={{ borderColor: confidenceColor, color: confidenceColor, background: `${confidenceColor}15` }}>
-          {signal.confidence.toFixed(1)}% CONFIDENCE
+    <div className="ac-card overflow-hidden mb-4">
+      <div className="flex items-center justify-between px-4 py-2 border-b border-[var(--ac-border)] bg-black/20">
+        <div className="label-mono">High-Confidence Event</div>
+        <div className="bg-ac-gold-bg border-[0.5px] border-ac-gold px-2 py-0.5 rounded text-[10px] font-mono text-ac-gold font-bold">
+          {signal.confidence.toFixed(1)}% CONF
         </div>
       </div>
-      <div className="p-3.5">
-        <div className="flex items-baseline gap-2.5 mb-2.5">
-          <span className="text-2xl font-bold font-mono text-[var(--ac-green)]">BUY</span>
-          <span className="text-lg font-medium font-mono text-[var(--ac-text)]">{signal.symbol}</span>
-          <span className="text-xs text-[var(--ac-muted)] font-mono ml-1">@ ${signal.price.toFixed(4)}</span>
+      <div className="p-4">
+        <div className="flex items-baseline gap-4 mb-4">
+          <span className={clsx("font-mono text-2xl font-bold", signal.action === 'BUY' ? 'text-ac-green' : 'text-ac-red')}>
+            {signal.action}
+          </span>
+          <span className="font-mono text-xl text-ac-text font-medium">{signal.symbol}</span>
+          <span className="font-mono text-xs text-ac-muted ml-auto tabular-nums">@ ${signal.price.toFixed(4)}</span>
         </div>
-        <div className="bg-[var(--ac-bg)] border-[0.5px] border-[var(--ac-border)] rounded p-2.5 mb-2.5 text-[11px] text-[var(--ac-muted)] font-mono leading-relaxed">
-          <span className="text-[var(--ac-text)] opacity-70">THESIS:</span> {signal.thesis}
+        
+        <div className="border-[0.5px] border-[var(--ac-border)] bg-black/40 p-3 rounded mb-4 text-[11px] font-mono text-ac-muted leading-relaxed">
+          <span className="text-ac-text opacity-50 uppercase mr-1.5 font-bold">[Thesis]</span>
+          {signal.thesis}
         </div>
-        <div className="grid grid-cols-4 gap-1.5">
+
+        <div className="grid grid-cols-4 gap-2">
           {[
             { label: 'ENTRY', value: `$${signal.price.toFixed(4)}`, color: 'var(--ac-blue)' },
-            { label: 'TARGET 1', value: `$${signal.target1.toFixed(4)}`, color: 'var(--ac-green)' },
-            { label: 'TARGET 2', value: `$${signal.target2.toFixed(4)}`, color: 'var(--ac-green)' },
-            { label: 'STOP LOSS', value: `$${signal.stop.toFixed(4)}`, color: 'var(--ac-red)' },
+            { label: 'TGT 01', value: `$${signal.target1.toFixed(4)}`, color: 'var(--ac-green)' },
+            { label: 'TGT 02', value: `$${signal.target2.toFixed(4)}`, color: 'var(--ac-green)' },
+            { label: 'SL 00', value: `$${signal.stop.toFixed(4)}`, color: 'var(--ac-red)' },
           ].map((lvl) => (
-            <div key={lvl.label} className="text-center py-1.5 border-[0.5px] border-[var(--ac-border)] rounded bg-black/20">
-              <div className="text-[9px] font-mono text-[var(--ac-muted)] mb-0.5">{lvl.label}</div>
-              <div className="text-[11px] font-bold font-mono" style={{ color: lvl.color }}>{lvl.value}</div>
+            <div key={lvl.label} className="text-center p-2 border-[0.5px] border-[var(--ac-border)] rounded bg-black/10">
+              <div className="label-mono text-[9px] mb-1">{lvl.label}</div>
+              <div className="font-mono text-[11px] font-bold tabular-nums" style={{ color: lvl.color }}>{lvl.value}</div>
             </div>
           ))}
         </div>
@@ -79,17 +82,17 @@ function SignalPanel({ signal, loading }: any) {
   )
 }
 
-function FindingRow({ icon, text, onClick }: any) {
+function FindingRow({ icon, text }: any) {
   const iconColor = icon === 'confirm' ? 'var(--ac-green)' : icon === 'warn' ? 'var(--ac-gold)' : 'var(--ac-red)';
   return (
-    <div className="flex gap-2 mb-1.5 cursor-pointer hover:opacity-80 group" onClick={onClick}>
-      <div className="w-[12px] h-[12px] rounded-full mt-1 flex-shrink-0" style={{ background: iconColor }} />
-      <span className={clsx("transition-colors", onClick && "group-hover:text-[var(--ac-text)]")}>{text}</span>
+    <div className="flex gap-2.5 mb-2 group cursor-pointer hover:bg-white/5 p-1 rounded transition-colors">
+      <div className="w-[12px] h-[12px] rounded-full mt-0.5 flex-shrink-0" style={{ background: iconColor, opacity: 0.8 }} />
+      <span className="font-mono text-[10px] text-ac-muted group-hover:text-ac-text transition-colors">{text}</span>
     </div>
   )
 }
 
-// ── Main Page ──────────────────────────────────────────────────
+// ── Main Terminal ──────────────────────────────────────────────
 
 export default function HomePage() {
   const [time, setTime] = useState('')
@@ -97,10 +100,9 @@ export default function HomePage() {
   const [loading, setLoading] = useState(true)
   const [activeTab, setActiveTab] = useState(0)
   const [logs, setLogs] = useState<any[]>([
-    { ts: '09:41:02', level: 'OK', msg: 'AirClawOrchestrator initialized' },
-    { ts: '09:41:03', level: 'INFO', msg: 'AlphaEvolve simulation n=100 — Sharpe 4.7 — GATE PASSED' },
-    { ts: '09:41:04', level: 'INFO', msg: 'Researcher.get_whale_inflow(Nansen) → online' },
-    { ts: '09:41:05', level: 'OK', msg: 'Scanning Ethereum, Solana, and Base tokens...' },
+    { ts: '09:41:02', level: 'OK', msg: 'Core Intelligence Online' },
+    { ts: '09:41:03', level: 'INF', msg: 'AlphaEvolve Simulation loop n=100 complete' },
+    { ts: '09:41:04', level: 'INF', msg: 'Nansen Real-time Pipeline &bull; ACTIVE' },
   ])
   const logEndRef = useRef<HTMLDivElement>(null)
 
@@ -114,14 +116,12 @@ export default function HomePage() {
         const backendUrl = process.env.NEXT_PUBLIC_BACKEND_URL || 'http://localhost:8000'
         const res = await fetch(`${backendUrl}/api/signals`)
         const data = await res.json()
-        if (data.signals) {
+        if (data.signals && data.signals.length > 0) {
           setSignals(data.signals)
-          if (data.signals.length > 0) {
-            addLog('OK', `Detected ${data.signals.length} high-confidence convergence event(s).`)
-          }
+          addLog('SIG', `Detected ${data.signals.length} Institutional Signatures.`)
         }
       } catch (err) {
-        addLog('WARN', 'API disconnected. Operating in autonomous standalone mode.')
+        addLog('ERR', 'API Stream Offline &bull; Autonomous Mode Active')
       } finally {
         setLoading(false)
       }
@@ -142,114 +142,97 @@ export default function HomePage() {
 
   const addLog = (level: string, msg: string) => {
     const ts = new Date().toLocaleTimeString('en-US', { hour12: false })
-    setLogs(prev => [...prev.slice(-10), { ts, level, msg }])
+    setLogs(prev => [...prev.slice(-8), { ts, level, msg }])
   }
 
   const activeSignal = signals[0]
 
   return (
-    <div className="grid-bg min-h-screen ac-root px-4 md:px-0">
-      <div className="max-w-2xl mx-auto py-4">
+    <div className="grid-bg min-h-screen py-6 px-4 font-inter text-ac-text selection:bg-ac-gold-bg selection:text-ac-gold">
+      <div className="max-w-[720px] mx-auto space-y-4">
         
         {/* Header */}
-        <div className="ac-header">
+        <header className="flex justify-between items-end border-b-[0.5px] border-ac-border pb-4 mb-2">
           <div>
-            <div className="ac-title">AirClaw Research Room</div>
-            <div className="ac-subtitle">MoMoA v2.0 | Jane Street Architecture | Principal Researcher Mode</div>
+            <h1 className="font-syne text-4xl font-extrabold tracking-tight uppercase leading-none">AirClaw</h1>
+            <p className="label-mono mt-2 opacity-50">MoMoA Institutional Terminal &bull; Researcher Node 101</p>
           </div>
-          <div className="live-badge font-bold">
-            <span className="status-dot"></span>
-            {loading ? 'SYNCING' : 'LIVE SIM'}
+          <div className="flex items-center gap-3">
+            <div className="flex items-center gap-2 bg-ac-green-bg px-3 py-1.5 rounded-full border-[0.5px] border-ac-green/30">
+              <div className="status-dot bg-ac-green"></div>
+              <span className="label-mono text-ac-green text-[9px] font-bold italic">{loading ? 'SYNCING' : 'LIVE'}</span>
+            </div>
           </div>
-        </div>
+        </header>
 
-        {/* Score Cards */}
-        <div className="grid grid-cols-3 gap-2.5 mb-3">
+        {/* Global Stats Grid */}
+        <div className="grid grid-cols-3 gap-3">
           <ScoreCard 
-            label="Whale Inflow" 
-            value={activeSignal ? `${(activeSignal.whale * 100).toFixed(0)}%` : '95%'} 
+            label="Whale Intent" 
+            value={activeSignal ? `${(activeSignal.whale * 100).toFixed(1)}%` : '94.2%'} 
             sub="Nansen Smart Money" 
             color="var(--ac-green)" 
-            percent={activeSignal ? activeSignal.whale * 100 : 95}
+            percent={activeSignal ? activeSignal.whale * 100 : 94.2}
           />
           <ScoreCard 
-            label="Supply Shock" 
-            value={activeSignal ? `${(activeSignal.liquidity * 100).toFixed(0)}%` : '92%'} 
-            sub="CryptoQuant Reserves" 
-            color="var(--ac-green)" 
-            percent={activeSignal ? activeSignal.liquidity * 100 : 92}
-          />
-          <ScoreCard 
-            label="Sentiment" 
-            value={activeSignal ? `${(activeSignal.sentiment * 100).toFixed(0)}%` : '88%'} 
-            sub="Polymarket / Kalshi" 
+            label="Liquidity Plumb" 
+            value={activeSignal ? `${(activeSignal.liquidity * 100).toFixed(1)}%` : '91.8%'} 
+            sub="CryptoQuant Reservoir" 
             color="var(--ac-gold)" 
-            percent={activeSignal ? activeSignal.sentiment * 100 : 88}
+            percent={activeSignal ? activeSignal.liquidity * 100 : 91.8}
+          />
+          <ScoreCard 
+            label="Macro Sentiment" 
+            value={activeSignal ? `${(activeSignal.sentiment * 100).toFixed(1)}%` : '85.4%'} 
+            sub="Polymarket / Kalshi" 
+            color="var(--ac-blue)" 
+            percent={activeSignal ? activeSignal.sentiment * 100 : 85.4}
           />
         </div>
 
-        {/* Main Signal Display */}
-        <SignalPanel signal={activeSignal} loading={loading} />
+        {/* Primary Command Center */}
+        <SignalConsole signal={activeSignal} loading={loading} />
 
-        {/* Simulation Panel */}
-        <div className="ac-card mb-3">
-          <div className="flex items-center justify-between px-3.5 py-2.5 border-b border-[var(--ac-border)]">
-            <div className="label-mono uppercase text-[10px] tracking-widest text-[var(--ac-muted)]">AlphaEvolve Simulation — n=100 loops</div>
-            <span className="px-2 py-0.5 rounded text-[9px] font-mono font-bold bg-[var(--ac-green-bg)] text-[var(--ac-green)] border-[0.5px] border-[var(--ac-green)]">GATE PASSED</span>
+        {/* AlphaEvolve Engine Tracking */}
+        <div className="ac-card bg-black/30">
+          <div className="flex items-center justify-between px-4 py-2 border-b border-[var(--ac-border)]">
+            <div className="label-mono text-[9px]">Simulation Engine &bull; AlphaEvolve Loop</div>
+            <div className="flex items-center gap-2">
+                <span className="label-mono text-[8px] text-ac-green font-bold">GATE PASSED</span>
+            </div>
           </div>
-          <div className="grid grid-cols-4 gap-2 pt-3 pb-3.5 px-4 text-center">
+          <div className="grid grid-cols-4 gap-2 p-4 text-center">
             <div>
-              <div className="text-xl font-bold font-mono text-[var(--ac-green)]">4.7</div>
-              <div className="label-mono text-[9px] mt-1 text-center">Sharpe Ratio</div>
+              <div className="font-mono text-lg font-bold text-ac-green tracking-tight">4.7</div>
+              <div className="label-mono text-[8px] mt-1 opacity-50">Sharpe Ratio</div>
             </div>
             <div>
-              <div className="text-xl font-bold font-mono text-[var(--ac-gold)]">73%</div>
-              <div className="label-mono text-[9px] mt-1 text-center">Win Rate</div>
+              <div className="font-mono text-lg font-bold text-ac-gold tracking-tight">73%</div>
+              <div className="label-mono text-[8px] mt-1 opacity-50">Win Rate</div>
             </div>
             <div>
-              <div className="text-xl font-bold font-mono text-[var(--ac-red)]">-2.1%</div>
-              <div className="label-mono text-[9px] mt-1 text-center">Max Drawdown</div>
+              <div className="font-mono text-lg font-bold text-ac-red tracking-tight">-2.1%</div>
+              <div className="label-mono text-[8px] mt-1 opacity-50">Max Drawdown</div>
             </div>
             <div>
-              <div className="text-xl font-bold font-mono leading-tight">3.4:1</div>
-              <div className="label-mono text-[9px] mt-1 text-center">Avg R:R</div>
+              <div className="font-mono text-lg font-bold tracking-tight">3.4:1</div>
+              <div className="label-mono text-[8px] mt-1 opacity-50">Risk/Reward</div>
             </div>
           </div>
         </div>
 
-        {/* Weights + Research Room */}
-        <div className="grid md:grid-cols-2 gap-3 mb-3">
-          {/* Weights */}
-          <div className="ac-card p-3.5">
-            <div className="label-mono mb-2.5">AlphaEvolve Weights</div>
-            {[
-              { label: 'Whale (Intent)', val: 40 },
-              { label: 'Liquidity', val: 40 },
-              { label: 'Sentiment', val: 20 },
-            ].map(w => (
-              <div key={w.label} className="flex items-center gap-2 mb-2">
-                <span className="text-[10px] label-mono min-w-[70px] flex-shrink-0">{w.label}</span>
-                <div className="flex-1 h-1 bg-black/40 rounded-full">
-                  <div className="h-full bg-[var(--ac-gold)] rounded-full" style={{ width: `${w.val}%` }} />
-                </div>
-                <span className="text-[10px] font-mono font-bold w-7 text-right">{w.val}%</span>
-              </div>
-            ))}
-            <div className="mt-3.5 text-[10px] font-mono text-[var(--ac-muted)] flex justify-between">
-               <span>CONVERGENCE &rarr;</span>
-               <span className="text-[var(--ac-gold)] font-bold">{activeSignal ? activeSignal.confidence.toFixed(1) : '92.2'}%</span>
-            </div>
-          </div>
-
+        {/* Side Controls: Research & Watchdog */}
+        <div className="grid grid-cols-2 gap-3">
+          
           {/* Research Room Tabs */}
-          <div className="ac-card flex flex-col h-full">
-            <div className="flex border-b border-[var(--ac-border)] px-3 pt-1">
-              {['Findings', 'Risks', 'Prompts'].map((tab, i) => (
+          <div className="ac-card flex flex-col h-[180px]">
+            <div className="flex border-b border-[var(--ac-border)] px-4">
+              {['FINDINGS', 'RISKS', 'PROMPTS'].map((tab, i) => (
                 <div 
                   key={tab} 
                   className={clsx(
-                    "px-2.5 py-1.5 label-mono cursor-pointer border-b-2 transition-all duration-200",
-                    activeTab === i ? "text-[var(--ac-text)] border-[var(--ac-gold)]" : "text-[var(--ac-muted)] border-transparent"
+                    "px-2.5 py-2 label-mono cursor-pointer border-b-2 transition-all duration-200 text-[9px]",
+                    activeTab === i ? "text-ac-text border-ac-gold" : "text-ac-muted border-transparent"
                   )}
                   onClick={() => setActiveTab(i)}
                 >
@@ -257,86 +240,94 @@ export default function HomePage() {
                 </div>
               ))}
             </div>
-            <div className="p-3.5 text-[10px] font-mono text-[var(--ac-muted)] leading-relaxed h-[92px] overflow-y-auto">
+            <div className="p-4 flex-1 overflow-y-auto">
               {activeTab === 0 && (
                 <>
-                  <FindingRow icon="confirm" text="Whale convergence confirmed — Jump Crypto accumulation" />
-                  <FindingRow icon="confirm" text="Supply shock: -8.3% exchange reserves (7d)" />
-                  <FindingRow icon="warn" text="Sentiment: Polymarket thin liquidity — secondary (20%)" />
-                  <FindingRow icon="confirm" text="Sharpe 4.7 clears 4.0 gate — model promoted" />
+                  <FindingRow icon="confirm" text="Whale volume confirmed &bull; Jump Crypto" />
+                  <FindingRow icon="confirm" text="Exchange reserves decline detected" />
+                  <FindingRow icon="warn" text="Thin liquidity on secondary venues" />
+                  <FindingRow icon="confirm" text="Model validated @ 88% min confidence" />
                 </>
               )}
               {activeTab === 1 && (
                 <>
-                  <FindingRow icon="warn" text="Binance API rate limits: 1200/min — Antigravity buffer" />
-                  <FindingRow icon="warn" text="Nansen labels lag: 14-day — decay scaling enabled" />
-                  <FindingRow icon="reject" text="Claude API: ~800ms latency — async pipeline required" />
-                  <FindingRow icon="warn" text="BTC Correlation: 0.78 — systemic risk factor high" />
+                  <FindingRow icon="warn" text="Rate limit risk on upstream API (Proxy buffer)" />
+                  <FindingRow icon="warn" text="Label decay on Nansen entities (14d)" />
+                  <FindingRow icon="reject" text="Claude latency high (800ms) &bull; Async mode" />
                 </>
               )}
               {activeTab === 2 && (
                 <>
-                   <FindingRow icon="confirm" text="Aider: Researcher Agent TDD build &rarr;" />
-                   <FindingRow icon="confirm" text="Claude: Jane Street synthesis prompt &rarr;" />
-                   <FindingRow icon="confirm" text="AlphaEvolve: Simulation prompt &rarr;" />
+                   <FindingRow icon="confirm" text="Researcher TDD build prompt &rarr;" />
+                   <FindingRow icon="confirm" text="Strategist Bayesian prompt &rarr;" />
                 </>
               )}
             </div>
           </div>
-        </div>
 
-        {/* Watchdog Panel */}
-        <div className="ac-card mb-3">
-          <div className="flex items-center justify-between px-3.5 py-2 border-b border-[var(--ac-border)]">
-              <div className="label-mono text-[10px]">Active Watchdogs (1/2 slots)</div>
-              <div className="live-badge !py-0 !text-[9px] !border-none !bg-transparent uppercase">
-                <span className="status-dot"></span>Monitoring
-              </div>
-          </div>
-          <div className="px-3.5 py-2.5">
-            <div className="flex justify-between items-center text-[11px] font-mono">
-              <span className="text-[var(--ac-text)] font-bold">ZRO/USDT</span>
-              <span className="text-[var(--ac-muted)]">Entry $4.50</span>
-              <span className="text-[var(--ac-muted)] px-3">Crnt $4.68</span>
-              <span className="text-[var(--ac-green)] font-bold">+4.0%</span>
-              <span className="ml-3 bg-[var(--ac-green-bg)] text-[var(--ac-green)] border-[0.5px] border-[var(--ac-green)] px-1.5 py-0.5 rounded-[3px] text-[8px] font-bold">SECURE</span>
+          {/* Active Watchdogs */}
+          <div className="ac-card flex flex-col h-[180px]">
+            <div className="flex items-center justify-between px-4 py-2 border-b border-[var(--ac-border)]">
+                <div className="label-mono text-[9px]">Active Monitor (1/2)</div>
+                <div className="flex items-center gap-1">
+                  <div className="w-1.5 h-1.5 rounded-full bg-ac-green animate-pulse"></div>
+                </div>
+            </div>
+            <div className="p-4 space-y-3">
+                <div className="p-2 border-[0.5px] border-ac-border rounded bg-black/20">
+                    <div className="flex justify-between items-center mb-1">
+                        <span className="font-mono text-[10px] font-bold text-ac-text">ZRO/USDT</span>
+                        <span className="font-mono text-[10px] text-ac-green font-bold">+4.0%</span>
+                    </div>
+                    <div className="flex justify-between text-[8px] font-mono text-ac-muted">
+                        <span>ENT: $4.50</span>
+                        <span>CRN: $4.68</span>
+                    </div>
+                    <div className="mt-2 text-center py-0.5 bg-ac-green-bg border-[0.5px] border-ac-green/30 rounded font-mono text-[7px] text-ac-green font-extrabold uppercase tracking-widest">
+                        SECURED
+                    </div>
+                </div>
+                <div className="p-2 border-dashed border-[0.5px] border-ac-border rounded text-center py-6 opacity-20">
+                   <span className="label-mono text-[8px]">Empty Slot</span>
+                </div>
             </div>
           </div>
         </div>
 
-        {/* Action Buttons */}
-        <div className="flex gap-2 mb-3 flex-wrap">
-          <button className="ac-btn ac-btn-primary">Setup Guide &rarr;</button>
-          <button className="ac-btn ac-btn-gold">Strategist &rarr;</button>
-          <button className="ac-btn">AlphaEvolve &rarr;</button>
-          <button className="ac-btn ac-btn-danger">PANIC CALC</button>
-          <button className="ac-btn">RE-RUN SIM</button>
+        {/* Global Action Terminal */}
+        <div className="flex gap-2 flex-wrap">
+          <button className="bg-ac-gold-bg border-[0.5px] border-ac-gold px-4 py-1.5 rounded font-mono text-[9px] text-ac-gold hover:bg-ac-gold-bg/40 transition-all font-bold tracking-tight">SETUP GUIDE &rarr;</button>
+          <button className="border-[0.5px] border-ac-border px-4 py-1.5 rounded font-mono text-[9px] text-ac-text hover:bg-ac-surface transition-all tracking-tight">STRATEGIST PROMPT</button>
+          <button className="border-[0.5px] border-ac-border px-4 py-1.5 rounded font-mono text-[9px] text-ac-text hover:bg-ac-surface transition-all tracking-tight">RE-RUN SIM</button>
+          <button className="border-[0.5px] border-ac-red text-ac-red bg-ac-red-bg px-4 py-1.5 rounded font-mono text-[9px] hover:opacity-80 transition-all font-bold tracking-tight">PANIC CALC</button>
         </div>
 
-        {/* Local Log Terminal */}
-        <div className="log-terminal h-[110px]">
+        {/* Live System Log */}
+        <div className="log-terminal h-[100px]">
           {logs.map((log, i) => (
-            <div key={i} className="flex gap-2 px-0.5">
-              <span className="opacity-30">{log.ts}</span>
+            <div key={i} className="flex gap-2 px-1">
+              <span className="opacity-30 flex-shrink-0">{log.ts}</span>
               <span className={clsx(
-                log.level === 'OK' ? 'text-[var(--ac-green)]' : 
-                log.level === 'WARN' ? 'text-[var(--ac-red)]' : 
-                'text-[var(--ac-blue)]'
+                "flex-shrink-0",
+                log.level === 'OK' ? 'text-ac-green' : 
+                log.level === 'ERR' ? 'text-ac-red' : 
+                log.level === 'SIG' ? 'text-ac-gold' :
+                'text-ac-blue'
               )}>
                 [{log.level}]
               </span>
-              <span>{log.msg}</span>
+              <span className="truncate">{log.msg}</span>
             </div>
           ))}
           <div ref={logEndRef} />
         </div>
 
-        {/* Footer info */}
-        <div className="flex justify-between items-center mt-6 text-ink-faint font-mono text-[10px] pb-8 opacity-40">
-           <span>AIRCLAW INTEL &copy; 2024</span>
-           <span className="tabular">{time}</span>
-           <span>JANE STREET MODE ACTIVE</span>
-        </div>
+        {/* Secondary Info Footer */}
+        <footer className="pt-4 flex justify-between items-center text-ac-muted opacity-30 font-mono text-[9px] pb-12">
+           <span>AIRCLAW INTEL &bull; JANE STREET STRATEGY ACTIVE</span>
+           <span className="tabular-nums tracking-wide">{time}</span>
+           <span>TERMINAL ACCESS // 2219-SALZIL</span>
+        </footer>
 
       </div>
     </div>

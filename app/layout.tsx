@@ -1,16 +1,15 @@
 import type { Metadata } from 'next'
-import { Instrument_Serif, JetBrains_Mono, Syne } from 'next/font/google'
+import { Syne, Inter, JetBrains_Mono } from 'next/font/google'
 import './globals.css'
-
-const instrumentSerif = Instrument_Serif({
-  subsets: ['latin'],
-  weight: '400',
-  variable: '--font-instrument',
-})
 
 const syne = Syne({
   subsets: ['latin'],
   variable: '--font-syne',
+})
+
+const inter = Inter({
+  subsets: ['latin'],
+  variable: '--font-inter',
 })
 
 const jetbrainsMono = JetBrains_Mono({
@@ -19,7 +18,7 @@ const jetbrainsMono = JetBrains_Mono({
 })
 
 export const metadata: Metadata = {
-  title: 'AirClaw Intelligence Engine',
+  title: 'AirClaw | Principal Researcher Terminal',
   description: 'Institutional-grade trade convergence and multi-agent intelligence.',
 }
 
@@ -30,7 +29,7 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body className={`${instrumentSerif.variable} ${syne.variable} ${jetbrainsMono.variable} font-sans`}>
+      <body className={`${syne.variable} ${inter.variable} ${jetbrainsMono.variable} font-sans antialiased text-ac-text bg-ac-bg`}>
         {children}
       </body>
     </html>
