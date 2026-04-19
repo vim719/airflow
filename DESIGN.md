@@ -6,9 +6,9 @@
 - **Project type:** Real-time data terminal / Research Room.
 
 ## Aesthetic Direction
-- **Direction:** Industrial/Utilitarian.
-- **Decoration level:** Intentional (Grid-paper backgrounds, 0.5px borders, subtle grain).
-- **Mood:** Authoritative, high-stakes, and proprietary. Like a Bloomberg terminal for the next generation of multi-agent intelligence.
+- **Direction:** Institutional Light / Utilitarian.
+- **Decoration level:** Intentional (Subtle blue-grid background, hairline borders).
+- **Mood:** Clean, high-precision, and professional. Like a modern quantitative research environment (Stripe/Jane Street style).
 
 ## Typography
 - **Display/Hero:** Syne (700-800) — Brutalist, wide-set sans for branding and section headers.
@@ -16,14 +16,15 @@
 - **Data/Tables:** JetBrains Mono — Strict tabular-nums for financial data alignment.
 - **Scale:** Modular scale starting at 10px (labels) up to 48px (main brand).
 
-## Color
-- **Approach:** Restrained Institutional.
-- **Primary:** `#D4AF37` (Aged Gold) — Represents high-confidence "Alpha" signals.
-- **Surface:** `#141414` (Deep Charcoal) — Main component background.
-- **Background:** `#0A0A0A` (Pure Black) — Base terminal background.
+## Color (Light Bluish Theme)
+- **Approach:** Restrained Institutional Light.
+- **Primary:** `#A47F24` (Institutional Gold) — Deeper for contrast on light.
+- **Surface:** `#FFFFFF` (Pure White) — Card backgrounds.
+- **Background:** `#F4F7FA` (Light Ice Blue) — Main terminal background.
+- **Text:** `#1A1C1E` (Midnight Blue-Black) — Primary text.
 - **Semantic:** 
-  - Success: `#1D9E75` (Nansen Green)
-  - Danger: `#E24B4A` (Stop-loss Red)
+  - Success: `#168060` (Deeper Nansen Green)
+  - Danger: `#C53030` (Aged Red)
   - Info/Macro: `#185FA5` (Correlated Blue)
 
 ## Spacing

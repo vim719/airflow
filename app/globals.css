@@ -3,19 +3,19 @@
 @tailwind utilities;
 
 :root {
-  --ac-bg: #0A0A0A;
-  --ac-surface: #141414;
-  --ac-border: #262626;
-  --ac-text: #E5E5E5;
-  --ac-muted: #737373;
-  --ac-gold: #D4AF37;
-  --ac-gold-bg: #D4AF3715;
-  --ac-green: #1D9E75;
-  --ac-green-bg: #1D9E7515;
-  --ac-red: #E24B4A;
-  --ac-red-bg: #E24B4A15;
+  --ac-bg: #F4F7FA;
+  --ac-surface: #FFFFFF;
+  --ac-border: #DCE4ED;
+  --ac-text: #1A1C1E;
+  --ac-muted: #64748B;
+  --ac-gold: #A47F24;
+  --ac-gold-bg: #A47F2410;
+  --ac-green: #168060;
+  --ac-green-bg: #16806010;
+  --ac-red: #C53030;
+  --ac-red-bg: #C5303010;
   --ac-blue: #185FA5;
-  --ac-blue-bg: #185FA515;
+  --ac-blue-bg: #185FA510;
 }
 
 @layer base {
@@ -29,20 +29,21 @@
 @layer components {
   .grid-bg {
     background-image: 
-      linear-gradient(rgba(255, 255, 255, 0.02) 1px, transparent 1px),
-      linear-gradient(90deg, rgba(255, 255, 255, 0.02) 1px, transparent 1px);
+      linear-gradient(rgba(0, 100, 255, 0.03) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(0, 100, 255, 0.03) 1px, transparent 1px);
     background-size: 20px 20px;
   }
 
   .ac-card {
     background: var(--ac-surface);
-    border: 0.5px solid var(--ac-border);
+    /* Safari-safe hairline border using box-shadow */
+    box-shadow: 0 0 0 0.5px var(--ac-border), 0 1px 3px rgba(0,0,0,0.02);
     border-radius: 4px;
     transition: all 0.2s cubic-bezier(0.2, 0.8, 0.2, 1);
   }
 
   .ac-card:hover {
-    border-color: #404040;
+    box-shadow: 0 0 0 0.5px #CBD5E1, 0 4px 6px -1px rgba(0, 0, 0, 0.05);
   }
 
   .label-mono {
@@ -69,13 +70,13 @@
 
   @keyframes inst-pulse {
     0%, 100% { opacity: 1; transform: scale(1); }
-    50% { opacity: 0.3; transform: scale(0.9); }
+    50% { opacity: 0.4; transform: scale(0.9); }
   }
 
   /* Terminal-style scrollbar */
   ::-webkit-scrollbar {
-    width: 4px;
-    height: 4px;
+    width: 6px;
+    height: 6px;
   }
   ::-webkit-scrollbar-track {
     background: transparent;
@@ -85,6 +86,6 @@
     border-radius: 4px;
   }
   ::-webkit-scrollbar-thumb:hover {
-    background: #404040;
+    background: #CBD5E1;
   }
 }

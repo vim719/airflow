@@ -25,7 +25,7 @@ function SignalConsole({ signal, loading }: any) {
   if (!signal) {
     return (
       <div className="ac-card overflow-hidden mb-4">
-        <div className="flex items-center justify-between px-4 py-2 border-b border-[var(--ac-border)] bg-black/20">
+        <div className="flex items-center justify-between px-4 py-2 border-b border-[var(--ac-border)] bg-gray-500/5">
           <div className="label-mono">Convergence Stream</div>
           <div className="flex items-center gap-2">
             <div className="status-dot bg-ac-muted/40"></div>
@@ -59,7 +59,7 @@ function SignalConsole({ signal, loading }: any) {
           <span className="font-mono text-xs text-ac-muted ml-auto tabular-nums">@ ${signal.price.toFixed(4)}</span>
         </div>
         
-        <div className="border-[0.5px] border-[var(--ac-border)] bg-black/40 p-3 rounded mb-4 text-[11px] font-mono text-ac-muted leading-relaxed">
+        <div className="border-[0.5px] border-[var(--ac-border)] bg-gray-500/5 p-3 rounded mb-4 text-[11px] font-mono text-ac-muted leading-relaxed">
           <span className="text-ac-text opacity-50 uppercase mr-1.5 font-bold">[Thesis]</span>
           {signal.thesis}
         </div>
@@ -71,7 +71,7 @@ function SignalConsole({ signal, loading }: any) {
             { label: 'TGT 02', value: `$${signal.target2.toFixed(4)}`, color: 'var(--ac-green)' },
             { label: 'SL 00', value: `$${signal.stop.toFixed(4)}`, color: 'var(--ac-red)' },
           ].map((lvl) => (
-            <div key={lvl.label} className="text-center p-2 border-[0.5px] border-[var(--ac-border)] rounded bg-black/10">
+            <div key={lvl.label} className="text-center p-2 border-[0.5px] border-[var(--ac-border)] rounded bg-gray-500/5">
               <div className="label-mono text-[9px] mb-1">{lvl.label}</div>
               <div className="font-mono text-[11px] font-bold tabular-nums" style={{ color: lvl.color }}>{lvl.value}</div>
             </div>
@@ -85,7 +85,7 @@ function SignalConsole({ signal, loading }: any) {
 function FindingRow({ icon, text }: any) {
   const iconColor = icon === 'confirm' ? 'var(--ac-green)' : icon === 'warn' ? 'var(--ac-gold)' : 'var(--ac-red)';
   return (
-    <div className="flex gap-2.5 mb-2 group cursor-pointer hover:bg-white/5 p-1 rounded transition-colors">
+    <div className="flex gap-2.5 mb-2 group cursor-pointer hover:bg-ac-gold-bg p-1 rounded transition-colors">
       <div className="w-[12px] h-[12px] rounded-full mt-0.5 flex-shrink-0" style={{ background: iconColor, opacity: 0.8 }} />
       <span className="font-mono text-[10px] text-ac-muted group-hover:text-ac-text transition-colors">{text}</span>
     </div>
@@ -194,7 +194,7 @@ export default function HomePage() {
         <SignalConsole signal={activeSignal} loading={loading} />
 
         {/* AlphaEvolve Engine Tracking */}
-        <div className="ac-card bg-black/30">
+        <div className="ac-card bg-gray-500/5">
           <div className="flex items-center justify-between px-4 py-2 border-b border-[var(--ac-border)]">
             <div className="label-mono text-[9px]">Simulation Engine &bull; AlphaEvolve Loop</div>
             <div className="flex items-center gap-2">
@@ -274,7 +274,7 @@ export default function HomePage() {
                 </div>
             </div>
             <div className="p-4 space-y-3">
-                <div className="p-2 border-[0.5px] border-ac-border rounded bg-black/20">
+                <div className="p-2 border-[0.5px] border-ac-border rounded bg-gray-500/5">
                     <div className="flex justify-between items-center mb-1">
                         <span className="font-mono text-[10px] font-bold text-ac-text">ZRO/USDT</span>
                         <span className="font-mono text-[10px] text-ac-green font-bold">+4.0%</span>
